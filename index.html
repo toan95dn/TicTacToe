@@ -7,21 +7,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="app.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+        integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
     <title>TicTacToe</title>
 </head>
 
 <body>
-
+    <header>Tic Tac Toe</header>
+    <div class="modes">
+        <button id="pvpMode"><i class="fas fa-user"></i><i> vs </i><i class="fas fa-user"></i></button>
+        <button id="pvcMode"><i class="fas fa-user"></i><i> vs </i> <i class="fas fa-robot"></i></button>
+        <button id="pvAiMode"><i class="fas fa-user"></i><i> vs </i><i class="fas fa-brain"></i></button>
+    </div>
     <div class="chessboard">
-        <div data-index-num="0" class="title"><span class="material-icons"></span></div>
-        <div data-index-num="1" class="title"><span class="material-icons"></span></div>
-        <div data-index-num="2" class="title"><span class="material-icons"></span></div>
-        <div data-index-num="3" class="title"><span class="material-icons"></span></div>
-        <div data-index-num="4" class="title"><span class="material-icons"></span></div>
-        <div data-index-num="5" class="title"><span class="material-icons"></span></div>
-        <div data-index-num="6" class="title"><span class="material-icons"></span></div>
-        <div data-index-num="7" class="title"><span class="material-icons"></span></div>
-        <div data-index-num="8" class="title"><span class="material-icons"></span></div>
+        <div data-index-num="0" class="title"></div>
+        <div data-index-num="1" class="title"></div>
+        <div data-index-num="2" class="title"></div>
+        <div data-index-num="3" class="title"></div>
+        <div data-index-num="4" class="title"></div>
+        <div data-index-num="5" class="title"></div>
+        <div data-index-num="6" class="title"></div>
+        <div data-index-num="7" class="title"></div>
+        <div data-index-num="8" class="title"></div>
         <div id="popup">
             <p id="winnerNotice"></p>
             <button id="refreshButton"><span>Play again</span><span class="material-icons"

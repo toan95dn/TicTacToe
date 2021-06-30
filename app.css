@@ -6,38 +6,75 @@
 
 html{
     font-size: 62.5%;
+    font-family: 'Varela Round', sans-serif;
 }
 
 body{
     min-height: 100vh;
     max-width: 100vw;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    background: linear-gradient(to right, rgb(195, 55, 100), rgb(29, 38, 113));
+}
+
+/* Header */
+header{
+    font-size: 8rem;
+    font-weight: bolder;
+    color: #ff0d5f;
+    text-shadow: 0.3rem 0.3rem #76a9d1;
+}
+
+/* Modes */
+.modes{
+    width: 45rem ;
+    display: flex;
+
+}
+
+.modes button{
+    color:whitesmoke;
+    background-color: #445ff1;
+    font-weight: bolder;
+    font-size: 1.5rem;
+    flex:1;
+    height: 4rem;
+    margin:1rem;
+    border-radius: 1rem;
+    border:none;
+}
+
+.modes button:hover{
+    color:black;
 }
 
 /* Chess board */
 .chessboard{
     position: relative;
-    width: 500px;
-    height: 500px;
+    width: 45rem;
+    height: 45rem;
     display: grid;
     grid-template-columns: repeat(3,1fr);
     grid-template-rows: repeat(3,1fr);
+    gap: 1rem;
 }
 
 .chessboard div{
-    background-color: #69c9d0;
-    border: 3px solid black;
+    border: 0.35rem solid #f44336;
+    background-color: #faa8a1;
+    border-radius: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-span.material-icons{
-    font-size: 8rem ;
-    font-weight:bolder;
-    color: #EE1D52;
+.title{
+    font-size: 10rem;
+    font-weight: bolder;
+    text-shadow: 0.3rem 0.3rem #b5dfff;
+    color: #4ac375;
 }
 
 /* Popup after someone wins/tie */

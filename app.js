@@ -68,8 +68,6 @@ const boardModal = (() => {
         return true;
     }
 
-    const getboard = () => chessboard;//REMEMBER TO REMOVE THIS
-
     //setters
     const setValueOfTitle = (index, value) => { chessboard[index] = value; }
 
@@ -150,7 +148,7 @@ const boardModal = (() => {
 
 
 
-    return { checkGameStatus, setValueOfTitle, getboard, fillTitleAt, resetBoardModal, getAClearTitleIndex, getBestIndexToMove, getIndexOfTile, minimax };
+    return { checkGameStatus, getAClearTitleIndex, fillTitleAt, resetBoardModal, getAClearTitleIndex, getBestIndexToMove };
 
 })();
 
@@ -159,7 +157,7 @@ const boardView = (() => {
 
 
     const setView = (title, value) => {
-        title.firstChild.innerText = value;
+        title.innerText = value;
     }
 
     const getTitleViewAtIndex = (index) => {
@@ -167,7 +165,16 @@ const boardView = (() => {
         return allTitles[index];
     }
 
-    return { setView, getTitleViewAtIndex };
+    const resetBoardView = () => {
+        let allTitleViews = document.querySelectorAll('.title');
+        allTitleViews.forEach(
+            (titleView) => {
+                titleView.innerText = '';
+            }
+        )
+    }
+
+    return { setView, getTitleViewAtIndex, resetBoardView };
 })()
 
 const controller = (() => {
@@ -176,7 +183,8 @@ const controller = (() => {
     let currPlayer = first_Player;
     let Mode_PvP = 'Mode_PvP';
     let Mode_PvC = 'Mode_PvC';
-    let currMode = Mode_PvC;
+    let Mode_PvAI = 'Mode_PvAI';
+    let currMode = Mode_PvAI;
 
     boardModal.resetBoardModal();
 
@@ -197,9 +205,8 @@ const controller = (() => {
                     changeTurn();
                 }
 
-                if (currMode === Mode_PvC && currPlayer === second_Player) {
-                    //let pickTitleIndex = boardModal.getAClearTitleIndex(); //Will check pick title smart depends on
-                    let pickTitleIndex = boardModal.getBestIndexToMove();
+                if (currMode !== Mode_PvP && currPlayer === second_Player) {
+                    let pickTitleIndex = currMode === Mode_PvAI ? boardModal.getBestIndexToMove() : boardModal.getAClearTitleIndex();
                     if (pickTitleIndex !== undefined) {
                         boardModal.fillTitleAt(pickTitleIndex, second_Player);
                         boardView.setView(boardView.getTitleViewAtIndex(pickTitleIndex), currPlayer);
@@ -213,7 +220,6 @@ const controller = (() => {
                         changeTurn();
                     }
                 }
-
             })
         })
     })()
@@ -233,4 +239,45 @@ const controller = (() => {
         let popup = document.querySelector('#popup');
         popup.style.visibility = 'visible';
     }
+
+    function resetGame() {
+        boardModal.resetBoardModal();
+        boardView.resetBoardView();
+    }
+
+    (function addEventListenerForButtonsThatChangePlayMode() {
+        const pvpButton = document.querySelector('#pvpMode');
+        const pvcButton = document.querySelector('#pvcMode');
+        const pvAiButton = document.querySelector('#pvAiMode');
+
+        pvAiButton.style.color = 'black';//default mode
+
+
+        function changeButtonColor(turnOnButton, turnOffButton_1, turnOffButton_2) {
+            turnOnButton.style.color = 'black';
+            turnOffButton_1.style.color = 'white';
+            turnOffButton_2.style.color = 'white';
+        }
+
+        pvpButton.addEventListener('click', () => {
+            currMode = Mode_PvP;
+            changeButtonColor(pvpButton, pvcButton, pvAiButton);
+            resetGame();
+        })
+
+        pvcButton.addEventListener('click', () => {
+            currMode = Mode_PvC;
+            changeButtonColor(pvcButton, pvpButton, pvAiButton);
+            resetGame();
+        })
+
+        pvAiButton.addEventListener('click', () => {
+            currMode = Mode_PvAI;
+            changeButtonColor(pvAiButton, pvcButton, pvpButton);
+            resetGame();
+        })
+    })()
+
+
+
 })()
