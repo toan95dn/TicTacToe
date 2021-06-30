@@ -68,11 +68,8 @@ const boardModal = (() => {
         return true;
     }
 
-    //setters
-    const setValueOfTitle = (index, value) => { chessboard[index] = value; }
-
     //getters
-    const getAClearTitleIndex = () => {
+    const _getAClearTitleIndex = () => {
         let clearTitles = _getClearIndexes();
         return clearTitles[Math.floor(Math.random() * clearTitles.length)];
     }
@@ -85,6 +82,13 @@ const boardModal = (() => {
             }
         }
         return clearIndexes;
+    }
+
+    const getARandomMove = () => {
+        if (Math.floor(Math.random() * 3) === 1) {
+            return getBestIndexToMove();
+        }
+        return _getAClearTitleIndex();
     }
 
     //
@@ -116,7 +120,7 @@ const boardModal = (() => {
             if (currGameStatus === 'tie') {
                 return 0;
             }
-            else { return currGameStatus === 'O' ? 100 : -100; }
+            else { return currGameStatus === 'O' ? (100 - depth) : (depth - 100); }
         }
 
         if (isMaximizingPlayer) {
@@ -148,7 +152,7 @@ const boardModal = (() => {
 
 
 
-    return { checkGameStatus, getAClearTitleIndex, fillTitleAt, resetBoardModal, getAClearTitleIndex, getBestIndexToMove };
+    return { checkGameStatus, getARandomMove, fillTitleAt, resetBoardModal, getBestIndexToMove };
 
 })();
 
@@ -189,33 +193,31 @@ const controller = (() => {
     boardModal.resetBoardModal();
 
 
-    (function addEventListernersForallTitle() {
+    (function addEventListernersForallTitles() {
         let allTitles = document.querySelectorAll('.title');
         allTitles.forEach((title) => {
             title.addEventListener('click', () => {
-
                 if (boardModal.fillTitleAt(parseInt(title.dataset.indexNum), currPlayer)) {
                     boardView.setView(title, currPlayer);
                     if (boardModal.checkGameStatus() === currPlayer) {
                         showWinner(currPlayer);
-                        return;
                     }
                     else if (boardModal.checkGameStatus() === 'tie') {
+                        showWinner('tie');
                     }
                     changeTurn();
                 }
 
                 if (currMode !== Mode_PvP && currPlayer === second_Player) {
-                    let pickTitleIndex = currMode === Mode_PvAI ? boardModal.getBestIndexToMove() : boardModal.getAClearTitleIndex();
+                    let pickTitleIndex = currMode === Mode_PvAI ? boardModal.getBestIndexToMove() : boardModal.getARandomMove();
                     if (pickTitleIndex !== undefined) {
                         boardModal.fillTitleAt(pickTitleIndex, second_Player);
                         boardView.setView(boardView.getTitleViewAtIndex(pickTitleIndex), currPlayer);
                         if (boardModal.checkGameStatus() === currPlayer) {
                             showWinner(currPlayer);
-                            return;
                         }
                         else if (boardModal.checkGameStatus() === 'tie') {
-                            console.log('tie');
+                            showWinner('tie');
                         }
                         changeTurn();
                     }
@@ -229,20 +231,25 @@ const controller = (() => {
     }
 
     function showWinner(winner) {
-        console.log(winner);
-        if (winner === first_Player) {
-
+        let noticePopup = document.querySelector('#winnerNotice');
+        if (winner === 'tie') {
+            noticePopup.innerText = "It's a tie";
         }
         else {
-
+            if (currMode == Mode_PvP) {
+                noticePopup.innerText = `Player "${winner}" won`;
+            }
+            else {
+                if (winner === 'X') {
+                    noticePopup.innerText = 'You won';
+                }
+                else {
+                    noticePopup.innerText = 'Computer won';
+                }
+            }
         }
         let popup = document.querySelector('#popup');
         popup.style.visibility = 'visible';
-    }
-
-    function resetGame() {
-        boardModal.resetBoardModal();
-        boardView.resetBoardView();
     }
 
     (function addEventListenerForButtonsThatChangePlayMode() {
@@ -278,6 +285,20 @@ const controller = (() => {
         })
     })()
 
+    function resetGame() {
+        boardModal.resetBoardModal();
+        boardView.resetBoardView();
+        const popup = document.querySelector('#popup');
+        popup.style.visibility = 'hidden'; //turn off pop up
+        currPlayer = first_Player;
+    }
+
+    (function addEventListenerForReplayButton() {
+        const replayButton = document.querySelector('#refreshButton');
+        replayButton.addEventListener('click', () => {
+            resetGame();
+        })
+    })()
 
 
 })()

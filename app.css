@@ -98,7 +98,6 @@ header{
     color:black;
     font-weight: bolder;
     font-size: 2rem;
-    transition: 0.5s;
 }
 
 #refreshButton:hover{
@@ -108,14 +107,16 @@ header{
 #refresher{
     color:black;
     font-size: 3rem;
-    transition: 0.5s;
 }
 
 #winnerNotice{
     position: absolute;
-    color:#EE1D52;
-    font-size: 3rem;
+    color:#fff59a;
+    font-size: 5.5rem;
+    text-decoration: underline;
     font-weight: bold;
-    top:20%;
+    top:10%;
 }
+
+/* Responsive */
 
