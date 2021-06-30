@@ -10,15 +10,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
         integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <title>TicTacToe</title>
 </head>
 
 <body>
-    <header>Tic Tac Toe</header>
+    <header class="animate__animated animate__heartBeat">Tic Tac Toe</header>
+    <button id='startButton' class="animate__animated animate__fadeInUp">Let's go</button>
     <div class="modes">
-        <button id="pvpMode"><i class="fas fa-user"></i><i> vs </i><i class="fas fa-user"></i><br></button>
-        <button id="pvcMode"><i class="fas fa-user"></i><i> vs </i> <i class="fas fa-robot"></i></button>
-        <button id="pvAiMode"><i class="fas fa-user"></i><i> vs </i><i class="fas fa-brain"></i></button>
+        <button id="pvpMode"><i class="fas fa-user"></i><i> vs </i><i class="fas fa-user"></i><br>
+            (2 players)
+        </button>
+        <button id="pvcMode"><i class="fas fa-user"></i><i> vs </i> <i class="fas fa-robot"></i><br>
+            (normal)
+        </button>
+        <button id="pvAiMode"><i class="fas fa-user"></i><i> vs </i><i class="fas fa-brain"></i><br>
+            (unbeatable)
+        </button>
     </div>
     <div class="chessboard">
         <div data-index-num="0" class="title"></div>

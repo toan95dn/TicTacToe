@@ -150,8 +150,6 @@ const boardModal = (() => {
 
     }
 
-
-
     return { checkGameStatus, getARandomMove, fillTitleAt, resetBoardModal, getBestIndexToMove };
 
 })();
@@ -182,21 +180,22 @@ const boardView = (() => {
 })()
 
 const controller = (() => {
+
     let first_Player = 'X';
     let second_Player = 'O';
     let currPlayer = first_Player;
+
     let Mode_PvP = 'Mode_PvP';
     let Mode_PvC = 'Mode_PvC';
     let Mode_PvAI = 'Mode_PvAI';
     let currMode = Mode_PvAI;
 
-    boardModal.resetBoardModal();
-
-
-    (function addEventListernersForallTitles() {
+    function addEventListernersForallTitles() {
         let allTitles = document.querySelectorAll('.title');
         allTitles.forEach((title) => {
             title.addEventListener('click', () => {
+
+                //If the title is fillable, then fill it and change turn
                 if (boardModal.fillTitleAt(parseInt(title.dataset.indexNum), currPlayer)) {
                     boardView.setView(title, currPlayer);
                     if (boardModal.checkGameStatus() === currPlayer) {
@@ -209,7 +208,9 @@ const controller = (() => {
                 }
 
                 if (currMode !== Mode_PvP && currPlayer === second_Player) {
+                    //pick a move for computer depends on the mode
                     let pickTitleIndex = currMode === Mode_PvAI ? boardModal.getBestIndexToMove() : boardModal.getARandomMove();
+
                     if (pickTitleIndex !== undefined) {
                         boardModal.fillTitleAt(pickTitleIndex, second_Player);
                         boardView.setView(boardView.getTitleViewAtIndex(pickTitleIndex), currPlayer);
@@ -224,7 +225,7 @@ const controller = (() => {
                 }
             })
         })
-    })()
+    }
 
     function changeTurn() {
         currPlayer = currPlayer === first_Player ? second_Player : first_Player;
@@ -232,6 +233,7 @@ const controller = (() => {
 
     function showWinner(winner) {
         let noticePopup = document.querySelector('#winnerNotice');
+
         if (winner === 'tie') {
             noticePopup.innerText = "It's a tie";
         }
@@ -248,20 +250,21 @@ const controller = (() => {
                 }
             }
         }
+
         let popup = document.querySelector('#popup');
         popup.style.visibility = 'visible';
     }
 
-    (function addEventListenerForButtonsThatChangePlayMode() {
+    function addEventListenerForButtonsThatChangePlayMode() {
         const pvpButton = document.querySelector('#pvpMode');
         const pvcButton = document.querySelector('#pvcMode');
         const pvAiButton = document.querySelector('#pvAiMode');
 
-        pvAiButton.style.color = 'black';//default mode
+        pvAiButton.style.color = '#89ff8e';//default mode
 
 
         function changeButtonColor(turnOnButton, turnOffButton_1, turnOffButton_2) {
-            turnOnButton.style.color = 'black';
+            turnOnButton.style.color = '#89ff8e';
             turnOffButton_1.style.color = 'white';
             turnOffButton_2.style.color = 'white';
         }
@@ -283,7 +286,7 @@ const controller = (() => {
             changeButtonColor(pvAiButton, pvcButton, pvpButton);
             resetGame();
         })
-    })()
+    }
 
     function resetGame() {
         boardModal.resetBoardModal();
@@ -293,12 +296,34 @@ const controller = (() => {
         currPlayer = first_Player;
     }
 
-    (function addEventListenerForReplayButton() {
+
+    function addEventListenerForReplayButton() {
         const replayButton = document.querySelector('#refreshButton');
         replayButton.addEventListener('click', () => {
             resetGame();
         })
-    })()
+    }
 
+    function addEventListenerForStartButton() {
+        const startButton = document.querySelector('#startButton');
+        startButton.addEventListener('click', () => {
+            const board = document.querySelector('.chessboard');
+            const modes = document.querySelector('.modes');
+            board.style.display = 'grid';
+            modes.style.display = 'flex';
+            startButton.style.display = 'none';
+        })
+    }
 
+    function init() {
+        addEventListernersForallTitles();
+        addEventListenerForButtonsThatChangePlayMode();
+        addEventListenerForReplayButton();
+        addEventListenerForStartButton();
+        resetGame();
+    }
+
+    return { init }
 })()
+
+controller.init();

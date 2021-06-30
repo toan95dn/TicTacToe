@@ -10,6 +10,7 @@ html{
 }
 
 body{
+    position: relative;
     min-height: 100vh;
     max-width: 100vw;
     display: flex;
@@ -19,7 +20,7 @@ body{
     background: linear-gradient(to right, rgb(195, 55, 100), rgb(29, 38, 113));
 }
 
-/* Header */
+/* Header + Introduction */
 header{
     font-size: 8rem;
     font-weight: bolder;
@@ -27,11 +28,28 @@ header{
     text-shadow: 0.3rem 0.3rem #76a9d1;
 }
 
+#startButton{
+    margin: 5rem;
+    width: 14rem;
+    height: 5rem;
+    font-size: 2.5rem;
+    font-weight: bolder;
+    color:black;
+    background-color: #4158D0;
+    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+    border-radius: 1rem;
+    border:none;
+    box-shadow: 0.5rem 0.5rem rgba(0,0,0,0.5);
+}
+
+#startButton:hover{
+    color:#f5ff67;
+}
+
 /* Modes */
 .modes{
     width: 45rem ;
-    display: flex;
-
+    display: none;
 }
 
 .modes button{
@@ -40,10 +58,10 @@ header{
     font-weight: bolder;
     font-size: 1.5rem;
     flex:1;
-    height: 4rem;
+    height: 5rem;
     margin:1rem;
     border-radius: 1rem;
-    border:none;
+    border:0.3rem solid #63edff;
 }
 
 .modes button:hover{
@@ -59,6 +77,7 @@ header{
     grid-template-columns: repeat(3,1fr);
     grid-template-rows: repeat(3,1fr);
     gap: 1rem;
+    display: none;
 }
 
 .chessboard div{
@@ -119,4 +138,8 @@ header{
 }
 
 /* Responsive */
-
+@media (max-width:500px) {
+    html{
+        font-size: calc(100vw/50);
+    }
+}
