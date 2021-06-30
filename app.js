@@ -2,37 +2,40 @@ const boardModal = (() => {
 
     const chessboard = new Array(9);
 
-    const getIndexOfTile = (x, y) => { return y + x * 3; }
+    const getIndexOfTile = (x, y) => { return x + y * 3; }
 
     //return tie, untie, or continue the game
-    const checkGameStatus = (currPlayer) => {
+    const checkGameStatus = () => {
 
-        //check row
+        //check col
         for (let x = 0; x < 3; x++) {
             if (chessboard[getIndexOfTile(x, 0)] !== '' &&
                 chessboard[getIndexOfTile(x, 0)] === chessboard[getIndexOfTile(x, 1)]
                 && chessboard[getIndexOfTile(x, 1)] === chessboard[getIndexOfTile(x, 2)]) {
-                return currPlayer;
+                return chessboard[getIndexOfTile(x, 0)];
             }
         }
-        //check col
+        //check row
         for (let y = 0; y < 3; y++) {
             if (chessboard[getIndexOfTile(0, y)] !== '' &&
                 chessboard[getIndexOfTile(0, y)] === chessboard[getIndexOfTile(1, y)]
                 && chessboard[getIndexOfTile(1, y)] === chessboard[getIndexOfTile(2, y)]) {
-                return currPlayer;
+
+                return chessboard[getIndexOfTile(0, y)];
             }
         }
         //check diagnoal
         if (chessboard[getIndexOfTile(0, 0)] !== '' &&
             chessboard[getIndexOfTile(0, 0)] === chessboard[getIndexOfTile(1, 1)]
             && chessboard[getIndexOfTile(1, 1)] === chessboard[getIndexOfTile(2, 2)]) {
-            return currPlayer;
+
+            return chessboard[getIndexOfTile(1, 1)];
         }
         if (chessboard[getIndexOfTile(0, 2)] !== '' &&
             chessboard[getIndexOfTile(0, 2)] === chessboard[getIndexOfTile(1, 1)]
             && chessboard[getIndexOfTile(1, 1)] == chessboard[getIndexOfTile(2, 0)]) {
-            return currPlayer;
+
+            return chessboard[getIndexOfTile(1, 1)];
         }
         //Check if the board is full
         if (isTheBoardFull()) {
@@ -43,7 +46,7 @@ const boardModal = (() => {
     }
 
     const fillTitleAt = (index, value) => {
-        if (chessboard[index] !== 'X' && chessboard[index] !== 'O') {
+        if (chessboard[index] === '') {
             chessboard[index] = value;
             return true;
         }
@@ -58,7 +61,7 @@ const boardModal = (() => {
 
     const isTheBoardFull = () => {
         for (let i = 0; i < 9; i++) {
-            if (chessboard[i] !== 'X' && chessboard[i] !== 'Y') {
+            if (chessboard[i] === '') {
                 return false;
             }
         }
@@ -87,71 +90,67 @@ const boardModal = (() => {
     }
 
     //
-    const getBestMove = () => {
-        let bestScore = Number.NEGATIVE_INFINITY;
+    const getBestIndexToMove = () => {
+        let bestScore = -Infinity;
         let bestIndexToMove;
-        let clearIndexes = _getClearIndexes();
-
-        clearIndexes.forEach(index => {
-            chessboard[i] = 'O';
-            currScore = minimax(chessboard, 0, false);
-            if (currScore > bestScore) {
-                bestScore = currScore;
-                bestIndexToMove = index;
-            }
-            chessboard[i] = '';
-        })
-
-
 
         for (let i = 0; i < chessboard.length; i++) {
-            if (chessboard[i] !== 'X' && chessboard[i] !== 'O') {
-                chessboard[i] = 'O'; //O is for AI
-                currScore = minimax(chessboard, 0, false);
+            if (chessboard[i] === '') {
+                chessboard[i] = 'O';
+                let currScore = minimax(chessboard, 0, false);
+                chessboard[i] = '';
                 if (currScore > bestScore) {
-                    currScore = bestScore;
+                    bestScore = currScore;
                     bestIndexToMove = i;
                 }
-                chessboard[i] = '';
             }
         }
+
         return bestIndexToMove;
     }
+
 
     const minimax = (board, depth, isMaximizingPlayer) => {
 
         let currGameStatus = checkGameStatus();
+
         if (currGameStatus !== 'continue') {
             if (currGameStatus === 'tie') {
                 return 0;
             }
-            else {
-                return checkGameStatus === 'O' ? 100 : -100;
-            }
+            else { return currGameStatus === 'O' ? 100 : -100; }
         }
 
-        let clearIndexes = _getClearIndexes();
-
         if (isMaximizingPlayer) {
-            let maxScore = Number.NEGATIVE_INFINITY;
-            clearIndexes.forEach(index => {
-                currScore = minimax(board, depth, false);
-                maxScore = Math.max(currScore, maxScore);
-                board[index] = '';
-            });
+            let maxScore = -Infinity;
+            for (let i = 0; i < board.length; i++) {
+                if (board[i] === '') {
+                    board[i] = 'O';
+                    let currScore = minimax(board, depth + 1, false);
+                    maxScore = Math.max(currScore, maxScore);
+                    board[i] = '';
+                }
+            }
             return maxScore;
         }
         else {
-            let minScore = Number.POSITIVE_INFINITY;
-            clearIndexes.forEach(index => {
-                currScore = minimax(board, depth, false);
-                maxScore = Math.min(currScore, maxScore);
-                board[index] = '';
-            });
+            let minScore = Infinity;
+            for (let i = 0; i < board.length; i++) {
+                if (board[i] === '') {
+                    board[i] = 'X';
+                    let currScore = minimax(board, depth + 1, true);
+                    minScore = Math.min(currScore, minScore);
+                    board[i] = '';
+                }
+            }
             return minScore;
         }
+
     }
-    return { checkGameStatus, setValueOfTitle, getboard, fillTitleAt, resetBoardModal, getAClearTitleIndex };
+
+
+
+    return { checkGameStatus, setValueOfTitle, getboard, fillTitleAt, resetBoardModal, getAClearTitleIndex, getBestIndexToMove, getIndexOfTile, minimax };
 
 })();
 
@@ -189,20 +188,27 @@ const controller = (() => {
 
                 if (boardModal.fillTitleAt(parseInt(title.dataset.indexNum), currPlayer)) {
                     boardView.setView(title, currPlayer);
-                    if (boardModal.checkGameStatus(currPlayer) === currPlayer) {
+                    if (boardModal.checkGameStatus() === currPlayer) {
                         showWinner(currPlayer);
+                        return;
+                    }
+                    else if (boardModal.checkGameStatus() === 'tie') {
                     }
                     changeTurn();
                 }
 
                 if (currMode === Mode_PvC && currPlayer === second_Player) {
-                    let pickTitleIndex = boardModal.getAClearTitleIndex(); //Will check pick title smart depends on
-                    console.log(pickTitleIndex);
-                    if (pickTitleIndex) {
+                    //let pickTitleIndex = boardModal.getAClearTitleIndex(); //Will check pick title smart depends on
+                    let pickTitleIndex = boardModal.getBestIndexToMove();
+                    if (pickTitleIndex !== undefined) {
                         boardModal.fillTitleAt(pickTitleIndex, second_Player);
                         boardView.setView(boardView.getTitleViewAtIndex(pickTitleIndex), currPlayer);
                         if (boardModal.checkGameStatus() === currPlayer) {
                             showWinner(currPlayer);
+                            return;
+                        }
+                        else if (boardModal.checkGameStatus() === 'tie') {
+                            console.log('tie');
                         }
                         changeTurn();
                     }
@@ -217,6 +223,7 @@ const controller = (() => {
     }
 
     function showWinner(winner) {
+        console.log(winner);
         if (winner === first_Player) {
 
         }
