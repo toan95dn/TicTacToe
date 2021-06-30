@@ -50,6 +50,7 @@ header{
 .modes{
     width: 45rem ;
     display: none;
+    margin: 1rem;;
 }
 
 .modes button{
