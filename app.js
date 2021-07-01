@@ -200,6 +200,7 @@ const controller = (() => {
                     boardView.setView(title, currPlayer);
                     if (boardModal.checkGameStatus() === currPlayer) {
                         showWinner(currPlayer);
+                        return;
                     }
                     else if (boardModal.checkGameStatus() === 'tie') {
                         showWinner('tie');
@@ -216,6 +217,7 @@ const controller = (() => {
                         boardView.setView(boardView.getTitleViewAtIndex(pickTitleIndex), currPlayer);
                         if (boardModal.checkGameStatus() === currPlayer) {
                             showWinner(currPlayer);
+                            return;
                         }
                         else if (boardModal.checkGameStatus() === 'tie') {
                             showWinner('tie');
