@@ -141,6 +141,7 @@ header{
 /* Responsive */
 @media (max-width:500px) {
     html{
-        font-size: calc(100vw/50);
+        font-size: calc(100vw/50); 
+        /*  50rem ~ board length = 100vw if it's small        */
     }
 }
